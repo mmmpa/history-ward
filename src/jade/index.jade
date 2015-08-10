@@ -1,0 +1,11 @@
+script(src="/js/build.min.js")
+h1 history store
+ul
+  each val in [1, 2, 3, 4, 5]
+    li
+      h1
+        a(href="/"+val)= 'param' + val
+h1 state
+  p#state
+
+script(src="/js/app.js")
