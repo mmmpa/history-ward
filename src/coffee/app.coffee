@@ -1,9 +1,14 @@
 HistoryWard.startBrutally()
 
-window.addEventListener(HistoryWard.PUSHSTATE, (e)->
+window.addEventListener(HistoryWard.PUSHSTATE, ((e)->
+	console.log 'addEventListener'
 	console.log e
-	display.innerHTML = 'pushState: ' + write(e.detail)
-	)
+	display.innerHTML = if e.detail.state.param == 'param3'
+		e.preventDefault()
+		'not pushState'
+	else
+		'pushState: ' + write(e.detail)
+	))
 
 window.addEventListener(HistoryWard.BACKWARD, (e)->
 	console.log e

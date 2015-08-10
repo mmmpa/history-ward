@@ -19,7 +19,6 @@ window.HistoryWard = class HistoryWard
 		@position = 0
 
 		window.addEventListener('popstate', @onPopState)
-
 	clean: (e)->
 		#delete e.state.historyWardUID
 		e
@@ -42,17 +41,22 @@ window.HistoryWard = class HistoryWard
 		@shift(e)
 
 	pushState: (state = {}, title, url)->
+		cancelled = !window.dispatchEvent(new CustomEvent(HistoryWard.PUSHSTATE,
+			cancelable: true
+			cancelBubble: true
+			bubbles: true
+			detail:
+				state: state
+				title: title
+				url: url
+			))
+		return if cancelled
+
 		state.historyWardUID = @position = @uid += 1
 		if @isBrutal
 			history.pushStatePure(state, title, url)
 		else
 			history.pushState(state, title, url)
-
-		window.dispatchEvent(new CustomEvent(HistoryWard.PUSHSTATE, detail: {
-			state: state
-			title: title
-			url: url
-			}))
 
 	resume: ->
 		window.addEventListener('popstate', @onPopState)

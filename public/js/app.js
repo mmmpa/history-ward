@@ -3,10 +3,11 @@
 
   HistoryWard.startBrutally();
 
-  window.addEventListener(HistoryWard.PUSHSTATE, function(e) {
+  window.addEventListener(HistoryWard.PUSHSTATE, (function(e) {
+    console.log('addEventListener');
     console.log(e);
-    return display.innerHTML = 'pushState: ' + write(e.detail);
-  });
+    return display.innerHTML = e.detail.state.param === 'param3' ? (e.preventDefault(), 'not pushState') : 'pushState: ' + write(e.detail);
+  }));
 
   window.addEventListener(HistoryWard.BACKWARD, function(e) {
     console.log(e);

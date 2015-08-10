@@ -64,22 +64,29 @@
     };
 
     HistoryWard.prototype.pushState = function(state, title, url) {
+      var cancelled;
       if (state == null) {
         state = {};
       }
-      state.historyWardUID = this.position = this.uid += 1;
-      if (this.isBrutal) {
-        history.pushStatePure(state, title, url);
-      } else {
-        history.pushState(state, title, url);
-      }
-      return window.dispatchEvent(new CustomEvent(HistoryWard.PUSHSTATE, {
+      cancelled = !window.dispatchEvent(new CustomEvent(HistoryWard.PUSHSTATE, {
+        cancelable: true,
+        cancelBubble: true,
+        bubbles: true,
         detail: {
           state: state,
           title: title,
           url: url
         }
       }));
+      if (cancelled) {
+        return;
+      }
+      state.historyWardUID = this.position = this.uid += 1;
+      if (this.isBrutal) {
+        return history.pushStatePure(state, title, url);
+      } else {
+        return history.pushState(state, title, url);
+      }
     };
 
     HistoryWard.prototype.resume = function() {
